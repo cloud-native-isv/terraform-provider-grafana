@@ -1,0 +1,97 @@
+# Overview of Legacy SDK Resources and Data Sources
+
+This document lists all resources and data sources that are currently implemented using the legacy SDK (`NewLegacySDKResource` and `NewLegacySDKDataSource`).
+
+## Data Sources
+
+- `grafana_cloud_ips`
+- `grafana_cloud_organization`
+- `grafana_cloud_stack`
+- `grafana_dashboard`
+- `grafana_dashboards`
+- `grafana_data_source`
+- `grafana_folder`
+- `grafana_folders`
+- `grafana_library_panel`
+- `grafana_oncall_escalation_chain`
+- `grafana_oncall_integration`
+- `grafana_oncall_outgoing_webhook`
+- `grafana_oncall_schedule`
+- `grafana_oncall_slack_channel`
+- `grafana_oncall_team`
+- `grafana_oncall_user_group`
+- `grafana_organization`
+- `grafana_organization_preferences`
+- `grafana_organization_user`
+- `grafana_role`
+- `grafana_service_account`
+- `grafana_slos`
+- `grafana_synthetic_monitoring_probe`
+- `grafana_synthetic_monitoring_probes`
+- `grafana_team`
+- `grafana_user`
+- `grafana_users`
+
+## Resources
+
+- `grafana_annotation`
+- `grafana_asserts_custom_model_rules`
+- `grafana_asserts_log_config`
+- `grafana_asserts_notification_alerts_config`
+- `grafana_asserts_suppressed_assertions_config`
+- `grafana_asserts_thresholds`
+- `grafana_cloud_access_policy`
+- `grafana_cloud_access_policy_rotating_token`
+- `grafana_cloud_access_policy_token`
+- `grafana_cloud_plugin_installation`
+- `grafana_cloud_private_data_source_connect_network`
+- `grafana_cloud_private_data_source_connect_network_token`
+- `grafana_cloud_stack`
+- `grafana_cloud_stack_service_account`
+- `grafana_cloud_stack_service_account_rotating_token`
+- `grafana_cloud_stack_service_account_token`
+- `grafana_contact_point`
+- `grafana_dashboard`
+- `grafana_dashboard_permission`
+- `grafana_dashboard_public`
+- `grafana_data_source`
+- `grafana_data_source_config`
+- `grafana_data_source_permission`
+- `grafana_folder`
+- `grafana_folder_permission`
+- `grafana_k6_installation`
+- `grafana_library_panel`
+- `grafana_machine_learning_holiday`
+- `grafana_machine_learning_job`
+- `grafana_machine_learning_outlier_detector`
+- `grafana_message_template`
+- `grafana_mute_timing`
+- `grafana_notification_policy`
+- `grafana_oncall_escalation`
+- `grafana_oncall_escalation_chain`
+- `grafana_oncall_integration`
+- `grafana_oncall_on_call_shift`
+- `grafana_oncall_outgoing_webhook`
+- `grafana_oncall_route`
+- `grafana_oncall_schedule`
+- `grafana_organization`
+- `grafana_organization_preferences`
+- `grafana_playlist`
+- `grafana_report`
+- `grafana_role`
+- `grafana_role_assignment`
+- `grafana_rule_group`
+- `grafana_scim_config`
+- `grafana_service_account`
+- `grafana_service_account_permission`
+- `grafana_service_account_rotating_token`
+- `grafana_service_account_token`
+- `grafana_slo`
+- `grafana_sso_settings`
+- `grafana_synthetic_monitoring_check`
+- `grafana_synthetic_monitoring_check_alerts`
+- `grafana_synthetic_monitoring_installation`
+- `grafana_synthetic_monitoring_probe`
+- `grafana_team`
+- `grafana_team_external_group`
+- `grafana_user`
