@@ -1,7 +1,7 @@
 # Feature Index
 
-**Total Features**: 5  
-**Last Updated**: 2025-12-24
+**Total Features**: 6  
+**Last Updated**: 2026-01-13
 
 | ID | Name | Description | Status | Spec Path | Last Updated |
 |----|------|-------------|--------|-----------|--------------|
@@ -10,3 +10,4 @@
 | 003 | Comprehensive Testing Strategy | Multi-layer testing with unit and acceptance tests via Docker. | Implemented | (Not yet created) | 2025-12-24 |
 | 004 | Automated CI/CD Pipeline | GitHub Actions workflows for testing, validation, and release. | Implemented | (Not yet created) | 2025-12-24 |
 | 005 | Documentation Generation | Automated documentation generation using tfplugindocs. | Implemented | (Not yet created) | 2025-12-24 |
+| 006 | Grafana Data Sources Management | Manage Grafana Data Sources (Resources and Data Sources) via Terraform. | Implemented | .specify/specs/001-add-data-sources-ds/spec.md | 2026-01-13 |

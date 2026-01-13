@@ -1,0 +1,48 @@
+attributes:
+  data_sources:
+    type: list
+    computed: true
+    element_type: object
+    attributes:
+      id:
+        type: number
+        description: The internal database ID (API 'id')
+      org_id:
+        type: number
+        description: The organization ID
+      uid:
+        type: string
+        description: The unique identifier
+      name:
+        type: string
+        description: Data source name
+      type:
+        type: string
+        description: Data source type
+      type_logo_url:
+        type: string
+        description: Logo URL
+      access_mode:
+        type: string
+        description: Access mode
+      url:
+        type: string
+        description: Connection URL
+      username:
+        type: string
+        description: Username
+      database_name:
+        type: string
+        description: Database name
+      basic_auth_enabled:
+        type: boolean
+        description: Basic auth status
+      is_default:
+        type: boolean
+        description: Default status
+      json_data_encoded:
+        type: string
+        description: Extra configuration JSON
+      read_only:
+        type: boolean
+        description: Read-only status

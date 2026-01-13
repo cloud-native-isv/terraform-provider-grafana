@@ -8,7 +8,7 @@ description: "Task list template for feature implementation"
 **Input**: Design documents from `.specify/specs/[###-feature-name]/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Tests**: Tests are MANDATORY per the Constitution. Acceptance tests (`make testacc`) and unit tests must be included.
+**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -150,9 +150,7 @@ Examples of foundational tasks (adjust based on your project):
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] TXXX [P] Run `go generate ./...` to update documentation (do not edit docs/ manually)
-- [ ] TXXX Run `go fmt ./...` and `go vet ./...`
-- [ ] TXXX Run `make testacc` to verify acceptance tests
+- [ ] TXXX [P] Documentation updates in docs/
 - [ ] TXXX Code cleanup and refactoring
 - [ ] TXXX Performance optimization across all stories
 - [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
