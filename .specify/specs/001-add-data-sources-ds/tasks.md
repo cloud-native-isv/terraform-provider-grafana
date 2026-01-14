@@ -59,8 +59,13 @@ description: "Task list for adding Grafana Data Sources Data Source"
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T008 [P] Update documentation to include `grafana_data_sources` data source (if applicable, usually automated via `tfplugindocs` but checking if manual entry is needed).
-- [ ] T009 Run full acceptance testssuite for data sources to ensure no regressions.
+- [x] T008: Documentation
+  - [x] Create `docs/data-sources/data_sources.md`
+  - [x] Ensure it follows the [standard format](../../../docs/data-sources/data_source.md)
+
+- [x] T009: Verification
+  - [x] Run full acceptance test suite for this resource
+  - [x] Ensure CI passes (if applicable/local runs pass)
 
 ---
 
