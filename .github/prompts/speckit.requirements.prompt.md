@@ -10,7 +10,7 @@ You **MUST** treat the user input ($ARGUMENTS) as parameters for the current com
 
 ## Outline
 
-The text the user typed after `/speckit.specify` in the triggering message **is** the feature description. Assume you always have it available in this conversation even if `{ARGS}` appears literally below. Do not ask the user to repeat it unless they provided an empty command.
+The text the user typed after `/speckit.requirements` in the triggering message **is** the feature description. Assume you always have it available in this conversation even if `{ARGS}` appears literally below. Do not ask the user to repeat it unless they provided an empty command.
 
 Given that feature description, do this:
 
@@ -209,7 +209,7 @@ EOF
 
 ## Feature Integration
 
-The `/speckit.specify` command must maintain a **many-specs to one-feature** relationship:
+The `/speckit.requirements` command must maintain a **many-specs to one-feature** relationship:
 
 - A **Feature** is a relatively large, long‑lived concept, described by `.specify/memory/features/<ID>.md` and indexed in `.specify/memory/feature-index.md`.
 - A **Spec** is a smaller, focused slice under a Feature; one Feature can (and typically will) own multiple Specs over time.
@@ -222,9 +222,19 @@ When creating a new spec you MUST:
     - `.specify/memory/features/*.md` detail files
 3. Use the feature branch information (e.g. `SPECIFY_FEATURE` env, current git branch name, or the numeric prefix in `BRANCH_NAME`) as hints, but **do not** assume a strict `branch == feature` 1:1 mapping.
 
+### Feature 持续演进要求（spec 阶段）
+
+- 在生成或更新 spec 之前，必须回顾 **Feature 列表与 Feature 详情**：
+   - 新的 SPEC 可能引入新的 Feature，或让现有 Feature 失效/被替代。
+   - 需要保持 **功能性 Feature** 与 **非功能性 Feature** 的分类一致性。
+- 任何 Feature 的新增/合并/拆分/删除都必须同步更新：
+   - `.specify/memory/features/<ID>.md`
+   - `.specify/memory/feature-index.md`
+- Feature 变更需要记录来源（对应 spec 的证据），写入 Feature 详情的“关键变化/备注”。
+
 ### Feature lookup rules
 
-When `/speckit.specify` is invoked for a new spec:
+When `/speckit.requirements` is invoked for a new spec:
 
 1. **Scan for existing Feature**:
    - **Search by Context**: Scan `.specify/memory/features/*.md` and `.specify/memory/feature-index.md` to see if an existing Feature matches the intent/scope of the new spec.
@@ -318,3 +328,14 @@ Success criteria must be:
 - "Database can handle 1000 TPS" (implementation detail, use user-facing metric)
 - "React components render efficiently" (framework-specific)
 - "Redis cache hit rate above 80%" (technology-specific)
+
+## Handoffs
+
+**Before running this command**:
+
+- (Optional) Run `/speckit.feature` to ensure the feature registry is up to date.
+
+**After running this command**:
+
+- If the spec contains any `[NEEDS CLARIFICATION]`, run `/speckit.clarify`.
+- Otherwise proceed to `/speckit.plan`.

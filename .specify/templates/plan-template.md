@@ -1,13 +1,13 @@
-# Implementation Plan: [FEATURE]
+# Implementation Plan: [SPEC]
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `.specify/specs/[###-feature-name]/spec.md`
+**Branch**: `[###-spec-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Specification from `.specify/specs/[###-spec-name]/requirements.md`
 
 **Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
 
 ## Summary
 
-[Extract from feature spec: primary requirement + technical approach from research]
+[Extract from spec: primary requirement + technical approach from research]
 
 ## Technical Context
 
@@ -33,33 +33,34 @@
 
 **Core Principles Compliance**:
 
-- **Library-First**: Feature implemented as standalone library component
-- **CLI Interface**: Text-based interface with JSON/human-readable output
-- **Test-First**: Comprehensive tests written before implementation
-- **Integration Testing**: Contract tests for all external interfaces
-- **Observability**: Structured logging and clear error messages
-- **Simplicity**: Minimal project structure, no unnecessary abstractions
+- **Feature-Centric Development**: Feature list is the single source of truth; re-evaluate changes at every phase.
+- **Generated Documentation**: Docs come from `tfplugindocs`/`go generate`; no manual edits in `docs/`.
+- **Testing Mandate**: Acceptance tests for resources/data sources; unit tests for internal logic.
+- **Terraform Standards**: Follow HashiCorp SDK/Framework best practices.
+- **Go Tooling & Linting**: `go fmt`, `go vet`, `go generate`, `golangci-lint` before merge.
+- **Release & Versioning**: SemVer compliance and GoReleaser/GitHub Actions release flow.
 
 **Gates Status**: [✅ All gates pass / ❌ Specific gate failures with justification]
 
 ## Project Structure
 
-### Documentation (this feature)
+### Documentation (this spec)
 
 ```text
-.specify/specs/[###-feature]/
+.specify/specs/[###-spec]/
 ├── plan.md              # This file (/speckit.plan command output)
 ├── research.md          # Phase 0 output (/speckit.plan command)
 ├── data-model.md        # Phase 1 output (/speckit.plan command)
 ├── quickstart.md        # Phase 1 output (/speckit.plan command)
 ├── contracts/           # Phase 1 output (/speckit.plan command)
+├── feature-ref.md       # Phase 1 output (/speckit.plan command)
 └── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
 ### Source Code (repository root)
 <!--
   ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
+  for this spec. Delete unused options and expand the chosen structure with
   real paths (e.g., apps/admin, packages/something). The delivered plan must
   not include Option labels.
 -->
@@ -106,6 +107,7 @@ directories captured above]
 ## Complexity Tracking
 
 > **Fill ONLY if Constitution Check has violations that must be justified**
+> If no violations, explicitly write "N/A" and remove the table.
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|

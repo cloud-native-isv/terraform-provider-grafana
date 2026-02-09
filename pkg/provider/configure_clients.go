@@ -27,6 +27,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
 
+	openapiruntime "github.com/go-openapi/runtime"
+	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -173,6 +175,11 @@ func createGrafanaAPIClient(client *common.Client, providerConfig ProviderConfig
 		return err
 	}
 	client.GrafanaAPI = goapi.NewHTTPClientWithConfig(strfmt.Default, &cfg)
+	if rt, ok := client.GrafanaAPI.Transport.(*httptransport.Runtime); ok {
+		if jsonConsumer := rt.Consumers[openapiruntime.JSONMime]; jsonConsumer != nil {
+			rt.Consumers[openapiruntime.TextMime] = jsonConsumer
+		}
+	}
 	client.GrafanaAPIConfig = &cfg
 
 	return nil
