@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 
+	openapiruntime "github.com/go-openapi/runtime"
+	httptransport "github.com/go-openapi/runtime/client"
 	goapi "github.com/grafana/grafana-openapi-client-go/client"
 
 	"github.com/grafana/terraform-provider-grafana/v4/internal/common"
@@ -76,6 +78,7 @@ func OAPIClientFromExistingOrgResource(meta any, id string) (*goapi.GrafanaHTTPA
 	} else if orgID > 0 {
 		client = client.WithOrgID(orgID)
 	}
+	applyTextConsumer(client)
 	return client, orgID, restOfID
 }
 
@@ -89,16 +92,30 @@ func OAPIClientFromNewOrgResource(meta any, d *schema.ResourceData) (*goapi.Graf
 	} else if orgID > 0 {
 		client = client.WithOrgID(orgID)
 	}
+	applyTextConsumer(client)
 	return client, orgID
 }
 
 func OAPIGlobalClient(meta any) (*goapi.GrafanaHTTPAPI, error) {
 	metaClient := meta.(*common.Client)
 	client := meta.(*common.Client).GrafanaAPI.Clone().WithOrgID(0)
+	applyTextConsumer(client)
 	if metaClient.GrafanaAPIConfig.APIKey != "" {
 		return client, fmt.Errorf("global scope resources cannot be managed with an API key. Use basic auth instead")
 	}
 	return client, nil
+}
+
+func applyTextConsumer(client *goapi.GrafanaHTTPAPI) {
+	if client == nil {
+		return
+	}
+
+	if rt, ok := client.Transport.(*httptransport.Runtime); ok {
+		if jsonConsumer := rt.Consumers[openapiruntime.JSONMime]; jsonConsumer != nil {
+			rt.Consumers[openapiruntime.TextMime] = jsonConsumer
+		}
+	}
 }
 
 func parseOrgID(d *schema.ResourceData) int64 {
