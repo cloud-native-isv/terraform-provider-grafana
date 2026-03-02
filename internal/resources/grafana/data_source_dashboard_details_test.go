@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/grafana/grafana-openapi-client-go/models"
-	"github.com/grafana/terraform-provider-grafana/v4/internal/common"
 	"github.com/grafana/terraform-provider-grafana/v4/internal/testutils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -16,17 +15,17 @@ func TestAccDatasourceDashboardDetails_basic(t *testing.T) {
 	checks := []resource.TestCheckFunc{
 		dashboardCheckExists.exists("grafana_dashboard.test", &dashboard),
 		resource.TestCheckResourceAttr(
-			"data.grafana_dashboard_details.from_id", "title", "Production Overview Details",
+			"data.grafana_dashboard_details.from_uid", "title", "Production Overview Details",
 		),
-		resource.TestMatchResourceAttr(
-			"data.grafana_dashboard_details.from_id", "dashboard_id", common.IDRegexp,
+		resource.TestCheckResourceAttrPair(
+			"data.grafana_dashboard_details.from_uid", "dashboard_id", "grafana_dashboard.test", "dashboard_id",
 		),
 		resource.TestCheckResourceAttr(
-			"data.grafana_dashboard_details.from_id", "uid", "test-ds-dashboard-details-uid",
+			"data.grafana_dashboard_details.from_uid", "uid", "test-ds-dashboard-details-uid",
 		),
-		resource.TestCheckResourceAttrSet("data.grafana_dashboard_details.from_id", "config_json"),
-		resource.TestCheckResourceAttrSet("data.grafana_dashboard_details.from_id", "meta_json"),
-		resource.TestCheckResourceAttrSet("data.grafana_dashboard_details.from_id", "details_json"),
+		resource.TestCheckResourceAttrSet("data.grafana_dashboard_details.from_uid", "config_json"),
+		resource.TestCheckResourceAttrSet("data.grafana_dashboard_details.from_uid", "meta_json"),
+		resource.TestCheckResourceAttrSet("data.grafana_dashboard_details.from_uid", "details_json"),
 	}
 
 	resource.ParallelTest(t, resource.TestCase{

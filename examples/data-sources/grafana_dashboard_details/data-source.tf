@@ -11,10 +11,10 @@ resource "grafana_dashboard" "test" {
   })
 }
 
-data "grafana_dashboard_details" "from_id" {
+data "grafana_dashboard_details" "from_uid" {
   depends_on = [
     grafana_dashboard.test
   ]
 
-  dashboard_id = grafana_dashboard.test.dashboard_id
+  uid = grafana_dashboard.test.uid
 }

@@ -21,15 +21,15 @@ Datasource for retrieving complete details for a single Grafana dashboard from D
 		ReadContext: dataSourceReadDashboardDetails,
 		Schema: map[string]*schema.Schema{
 			"org_id": orgIDAttribute(),
-			"dashboard_id": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "The numerical ID of the Grafana dashboard to fetch.",
-			},
 			"uid": {
 				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The uid of the Grafana dashboard to fetch.",
+			},
+			"id": {
+				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "The uid of the Grafana dashboard.",
+				Description: "The numerical ID of the Grafana dashboard (deprecated in Grafana API; exposed for compatibility).",
 			},
 			"title": {
 				Type:        schema.TypeString,
@@ -91,40 +91,40 @@ func dataSourceReadDashboardDetails(ctx context.Context, d *schema.ResourceData,
 	metaClient := meta.(*common.Client)
 	client, orgID := OAPIClientFromNewOrgResource(meta, d)
 
-	id := d.Get("dashboard_id").(int)
-	if id < 1 {
-		return diag.FromErr(fmt.Errorf("`dashboard_id` must be a positive integer"))
+	uid := d.Get("uid").(string)
+	if uid == "" {
+		return diag.FromErr(fmt.Errorf("`uid` must be provided"))
 	}
 
-	searchHit, err := getDashboardByID(client, int64(id))
+	dashboardResp, err := client.Dashboards.GetDashboardByUID(uid)
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to find dashboard by id %d: %w", id, err))
-	}
-
-	dashboardResp, err := client.Dashboards.GetDashboardByUID(searchHit.UID)
-	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to get dashboard details for uid %q: %w", searchHit.UID, err))
+		return diag.FromErr(fmt.Errorf("failed to get dashboard details for uid %q: %w", uid, err))
 	}
 
 	dashboard := dashboardResp.GetPayload()
 	model, ok := dashboard.Dashboard.(map[string]any)
 	if !ok {
-		return diag.FromErr(fmt.Errorf("unexpected dashboard model for uid %q", searchHit.UID))
+		return diag.FromErr(fmt.Errorf("unexpected dashboard model for uid %q", uid))
 	}
 
 	configJSONBytes, err := json.Marshal(model)
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to marshal dashboard model for uid %q: %w", searchHit.UID, err))
+		return diag.FromErr(fmt.Errorf("failed to marshal dashboard model for uid %q: %w", uid, err))
 	}
 
 	metaJSONBytes, err := json.Marshal(dashboard.Meta)
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to marshal dashboard meta for uid %q: %w", searchHit.UID, err))
+		return diag.FromErr(fmt.Errorf("failed to marshal dashboard meta for uid %q: %w", uid, err))
 	}
 
 	detailsJSONBytes, err := json.Marshal(dashboard)
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to marshal dashboard details for uid %q: %w", searchHit.UID, err))
+		return diag.FromErr(fmt.Errorf("failed to marshal dashboard details for uid %q: %w", uid, err))
+	}
+
+	dashboardID := 0
+	if rawID, ok := model["id"].(float64); ok {
+		dashboardID = int(rawID)
 	}
 
 	version := 0
@@ -132,17 +132,17 @@ func dataSourceReadDashboardDetails(ctx context.Context, d *schema.ResourceData,
 		version = int(rawVersion)
 	}
 
-	title := searchHit.Title
+	title := ""
 	if rawTitle, ok := model["title"].(string); ok {
 		title = rawTitle
 	}
 
-	d.SetId(MakeOrgResourceID(orgID, searchHit.UID))
-	d.Set("dashboard_id", id)
-	d.Set("uid", searchHit.UID)
+	d.SetId(MakeOrgResourceID(orgID, uid))
+	d.Set("id", dashboardID)
+	d.Set("uid", uid)
 	d.Set("title", title)
 	d.Set("version", version)
-	d.Set("folder_title", searchHit.FolderTitle)
+	d.Set("folder_title", "")
 	d.Set("folder_uid", dashboard.Meta.FolderUID)
 	d.Set("is_starred", dashboard.Meta.IsStarred)
 	d.Set("slug", dashboard.Meta.Slug)
