@@ -87,6 +87,7 @@ func addValidationToResources(resources ...*common.Resource) []*common.Resource 
 
 var DataSources = addValidationToDataSources(
 	datasourceDashboard(),
+	datasourceDashboardDetails(),
 	datasourceDashboards(),
 	datasourceDatasource(),
 	datasourceDataSources(),
