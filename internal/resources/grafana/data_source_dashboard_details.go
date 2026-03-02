@@ -26,11 +26,6 @@ Datasource for retrieving complete details for a single Grafana dashboard from D
 				Required:    true,
 				Description: "The uid of the Grafana dashboard to fetch.",
 			},
-			"id": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "The numerical ID of the Grafana dashboard (deprecated in Grafana API; exposed for compatibility).",
-			},
 			"title": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -66,17 +61,12 @@ Datasource for retrieving complete details for a single Grafana dashboard from D
 				Computed:    true,
 				Description: "The full URL of the dashboard.",
 			},
-			"config_json": {
+			"config": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "The complete dashboard model JSON.",
 			},
-			"meta_json": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "The complete dashboard metadata JSON returned by Dashboard HTTP API.",
-			},
-			"details_json": {
+			"details": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "The complete Dashboard HTTP API response JSON, including dashboard and meta.",
@@ -112,19 +102,9 @@ func dataSourceReadDashboardDetails(ctx context.Context, d *schema.ResourceData,
 		return diag.FromErr(fmt.Errorf("failed to marshal dashboard model for uid %q: %w", uid, err))
 	}
 
-	metaJSONBytes, err := json.Marshal(dashboard.Meta)
-	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to marshal dashboard meta for uid %q: %w", uid, err))
-	}
-
 	detailsJSONBytes, err := json.Marshal(dashboard)
 	if err != nil {
 		return diag.FromErr(fmt.Errorf("failed to marshal dashboard details for uid %q: %w", uid, err))
-	}
-
-	dashboardID := 0
-	if rawID, ok := model["id"].(float64); ok {
-		dashboardID = int(rawID)
 	}
 
 	version := 0
@@ -138,7 +118,6 @@ func dataSourceReadDashboardDetails(ctx context.Context, d *schema.ResourceData,
 	}
 
 	d.SetId(MakeOrgResourceID(orgID, uid))
-	d.Set("id", dashboardID)
 	d.Set("uid", uid)
 	d.Set("title", title)
 	d.Set("version", version)
@@ -147,9 +126,8 @@ func dataSourceReadDashboardDetails(ctx context.Context, d *schema.ResourceData,
 	d.Set("is_starred", dashboard.Meta.IsStarred)
 	d.Set("slug", dashboard.Meta.Slug)
 	d.Set("url", metaClient.GrafanaSubpath(dashboard.Meta.URL))
-	d.Set("config_json", string(configJSONBytes))
-	d.Set("meta_json", string(metaJSONBytes))
-	if err := d.Set("details_json", string(detailsJSONBytes)); err != nil {
+	d.Set("config", string(configJSONBytes))
+	if err := d.Set("details", string(detailsJSONBytes)); err != nil {
 		return diag.Errorf("error setting dashboard details attributes: %s", err)
 	}
 
