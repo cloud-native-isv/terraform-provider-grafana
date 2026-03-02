@@ -90,6 +90,7 @@ var DataSources = addValidationToDataSources(
 	datasourceDashboardDetails(),
 	datasourceDashboards(),
 	datasourceDatasource(),
+	datasourceDataSourceDetails(),
 	datasourceDataSources(),
 	datasourceFolder(),
 	datasourceFolders(),
