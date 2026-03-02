@@ -1,7 +1,7 @@
 # Implementation Plan: [SPEC]
 
 **Branch**: `[###-spec-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Specification from `.specify/specs/[###-spec-name]/requirements.md`
+**Input**: Specification from `.specify/specs/[REQUIREMENTS_KEY]/requirements.md`
 
 **Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
 
@@ -33,12 +33,13 @@
 
 **Core Principles Compliance**:
 
-- **Feature-Centric Development**: Feature list is the single source of truth; re-evaluate changes at every phase.
-- **Generated Documentation**: Docs come from `tfplugindocs`/`go generate`; no manual edits in `docs/`.
-- **Testing Mandate**: Acceptance tests for resources/data sources; unit tests for internal logic.
-- **Terraform Standards**: Follow HashiCorp SDK/Framework best practices.
-- **Go Tooling & Linting**: `go fmt`, `go vet`, `go generate`, `golangci-lint` before merge.
-- **Release & Versioning**: SemVer compliance and GoReleaser/GitHub Actions release flow.
+- **Feature-Centric Development**: Feature Index is single source of truth; all phases re-evaluate Feature changes.
+- **Specification-Driven Development**: Code serves specifications; specifications are executable and generate working systems
+- **Intent-Driven Development**: Focus on "what" and "why" before "how"; use rich specifications with guardrails
+- **Test-First & Contract-Driven**: TDD flow followed; pure functions have unit tests; critical flows have regression coverage
+- **AI Agent Integration**: Only approved agents (GitHub Copilot, Qwen Code, opencode); configuration rejects unsupported providers
+- **Continuous Quality & Observability**: Structured logging; semantic versioning; CI quality gates; simple designs (YAGNI)
+- **SDD Workflow Compliance**: Follow spec → plan → tasks → implement workflow with proper validation at each phase
 
 **Gates Status**: [✅ All gates pass / ❌ Specific gate failures with justification]
 
@@ -47,7 +48,7 @@
 ### Documentation (this spec)
 
 ```text
-.specify/specs/[###-spec]/
+.specify/specs/[REQUIREMENTS_KEY]/
 ├── plan.md              # This file (/speckit.plan command output)
 ├── research.md          # Phase 0 output (/speckit.plan command)
 ├── data-model.md        # Phase 1 output (/speckit.plan command)

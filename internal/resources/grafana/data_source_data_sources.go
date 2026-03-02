@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/grafana/terraform-provider-grafana/v4/internal/common"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -89,8 +90,10 @@ func datasourceDataSources() *common.DataSource {
 func datasourceDataSourcesRead(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
 	client, orgID := OAPIClientFromNewOrgResource(meta, d)
 
+	tflog.Debug(ctx, "getting data sources", map[string]interface{}{"org_id": orgID})
 	resp, err := client.Datasources.GetDataSources()
 	if err != nil {
+		tflog.Error(ctx, "failed to get data sources", map[string]interface{}{"error": err})
 		return diag.FromErr(err)
 	}
 

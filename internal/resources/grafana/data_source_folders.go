@@ -6,6 +6,7 @@ import (
 	"github.com/grafana/grafana-openapi-client-go/client/search"
 	"github.com/grafana/grafana-openapi-client-go/models"
 	"github.com/grafana/terraform-provider-grafana/v4/internal/common"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -67,8 +68,10 @@ func readFolders(ctx context.Context, d *schema.ResourceData, meta any) diag.Dia
 	searchType := "dash-folder"
 	for {
 		params := search.NewSearchParams().WithType(&searchType).WithPage(&page)
+		tflog.Debug(ctx, "searching folders", map[string]interface{}{"page": page, "params": params, "org_id": orgID})
 		resp, err := client.Search.Search(params)
 		if err != nil {
+			tflog.Error(ctx, "failed to search folders", map[string]interface{}{"error": err, "page": page})
 			return diag.FromErr(err)
 		}
 		if len(resp.Payload) == 0 {

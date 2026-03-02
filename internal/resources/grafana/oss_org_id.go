@@ -2,6 +2,7 @@ package grafana
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -112,9 +113,16 @@ func applyTextConsumer(client *goapi.GrafanaHTTPAPI) {
 	}
 
 	if rt, ok := client.Transport.(*httptransport.Runtime); ok {
+		// Enable debug to see raw responses in stdout
+		// rt.Debug = true
+
 		if jsonConsumer := rt.Consumers[openapiruntime.JSONMime]; jsonConsumer != nil {
+			log.Printf("[DEBUG] applyTextConsumer: mapping text/plain and text/html to JSON consumer for client %p", client)
 			rt.Consumers[openapiruntime.TextMime] = jsonConsumer
+			rt.Consumers["text/html"] = jsonConsumer
 		}
+	} else {
+		log.Printf("[DEBUG] applyTextConsumer: client.Transport is NOT *httptransport.Runtime, it is: %T", client.Transport)
 	}
 }
 

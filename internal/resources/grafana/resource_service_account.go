@@ -163,7 +163,7 @@ func UpdateServiceAccount(ctx context.Context, d *schema.ResourceData, meta any)
 	updateRequest := models.UpdateServiceAccountForm{
 		Name:       d.Get("name").(string),
 		Role:       d.Get("role").(string),
-		IsDisabled: d.Get("is_disabled").(bool),
+		IsDisabled: common.Ref(d.Get("is_disabled").(bool)),
 	}
 
 	params := service_accounts.NewUpdateServiceAccountParams().

@@ -7,6 +7,7 @@ import (
 
 	"github.com/grafana/grafana-openapi-client-go/client/search"
 	"github.com/grafana/terraform-provider-grafana/v4/internal/common"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -89,8 +90,10 @@ func dataSourceReadDashboards(ctx context.Context, d *schema.ResourceData, meta 
 
 	d.SetId(MakeOrgResourceID(orgID, id))
 
+	tflog.Debug(ctx, "searching for dashboards", map[string]interface{}{"params": params, "org_id": orgID})
 	resp, err := client.Search.Search(params)
 	if err != nil {
+		tflog.Error(ctx, "failed to search for dashboards", map[string]interface{}{"error": err})
 		return diag.FromErr(err)
 	}
 

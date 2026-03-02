@@ -44,3 +44,5 @@ terraform-provider-grafana-generate
 .vscode
 vendor/
 .ai/tools/*.md
+
+__pycache__/
