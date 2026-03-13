@@ -204,6 +204,7 @@ Rules:
 **Before running this command**:
 
 - Optional: run `/speckit.skills` if agent behavior depends on a new skill.
+- Optional: run `/speckit.tools <tool-name>` to externalize and reuse tool records before wiring strict agent tool permissions.
 
 **After running this command**:
 

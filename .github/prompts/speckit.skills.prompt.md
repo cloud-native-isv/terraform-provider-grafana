@@ -11,7 +11,7 @@ $ARGUMENTS
 
 ## Outline
 
-目标：在当前对话上下文中，帮助用户创建或整理高质量 SpecKit Skill，确保结构规范、触发清晰、资源可复用。
+目标：在当前对话上下文中，帮助用户创建或整理高质量 SpecKit Skill，确保结构规范、触发清晰、资源可复用，并为每个技能生成可复用的确定性 `skill_id`。
 
 主流程：
 1. 优先从现有对话提炼可复用工作流
@@ -174,19 +174,25 @@ Skill 仅保留执行任务所需内容，不增加无关文档：
 1. **Initialize / Refresh**
    - 执行 `.specify/scripts/bash/create-new-skill.sh --json $ARGUMENTS` 创建或刷新结构，并解析 JSON 输出。
    - 若输出含 `"status": "refreshed"`：展示脚本消息并停止。
-   - 若输出含 `"SKILL_DIR"`：解析 `SKILL_DIR`、`SKILL_NAME`、`SKILL_DESCRIPTION`，确认创建成功。
+   - 若输出含 `"SKILL_DIR"`：解析 `SKILL_DIR`、`SKILL_NAME`、`SKILL_DESCRIPTION`、`SKILL_ID`，确认创建成功。
+   - `SKILL_ID` 必须是 `.github/skills/<skill-name>/SKILL.md` 的工作区相对路径。
 
-2. **Extract from Conversation (Default)**
+2. **ID-first reuse**
+   - 如果输入中提供 `skill_id`，先按 ID 精确定位 skill。
+   - 仅在 `skill_id` 缺失或失效时回退到自然语言发现。
+   - 当 `skill_id` 与文本提示冲突时，必须显式报错并停止自动继续。
+
+3. **Extract from Conversation (Default)**
    - 先复用当前对话，提炼流程、分支与验收标准。
 
-3. **Clarify if Needed (Fallback)**
+4. **Clarify if Needed (Fallback)**
    - 仅在提炼不足时触发。
    - 约束：每轮只问 1 个问题，等待用户答复后继续。
 
-4. **Draft & Refine**
+5. **Draft & Refine**
    - 持续更新 `SKILL.md`，围绕薄弱点小步修订，直到可执行。
 
-5. **Tailored Implementation**
+6. **Tailored Implementation**
    - 更新 frontmatter `{{DESCRIPTION}}` 与正文关键章节（如 `## Overview`、`## Workflow / Instructions`、`## Constraints`）。
    - 若模板中 `## Applicable Scenarios` / `## 适用场景` 与 frontmatter 重复且无增量价值，可删除。
    - 按需脚手架资源：
@@ -196,11 +202,11 @@ Skill 仅保留执行任务所需内容，不增加无关文档：
      - 工具说明 → `tools/`
    - 更新 `SKILL.md` 的资源链接，并询问用户是否导入已有文件。
 
-6. **Completion**
+7. **Completion**
    - 总结 Skill 能力与目录结构。
    - 给出示例提示词。
    - 给出下一步可选定制项。
-   - 输出 `SKILL.md` 路径。
+   - 输出 `SKILL.md` 路径与 `skill_id`。
 
 ## Slash Behavior Notes
 
