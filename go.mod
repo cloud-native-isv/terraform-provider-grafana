@@ -5,6 +5,7 @@ go 1.25.6
 require (
 	connectrpc.com/connect v1.18.1
 	github.com/Masterminds/semver/v3 v3.4.0
+	github.com/cloud-native-tools/cws-lib-go/lib/cloud/grafana/api v0.0.0-00010101000000-000000000000
 	github.com/fatih/color v1.18.0
 	github.com/go-openapi/runtime v0.28.0
 	github.com/go-openapi/strfmt v0.25.0
@@ -14,7 +15,7 @@ require (
 	github.com/grafana/grafana-app-sdk v0.50.1
 	github.com/grafana/grafana-asserts-public-clients/go/gcom v0.0.0-20251113191110-a4819b8e1224
 	github.com/grafana/grafana-com-public-clients/go/gcom v0.0.0-20251216082918-50bdab3538ca
-	github.com/grafana/grafana-openapi-client-go v0.0.0-20251118002049-9bc70ad4530f
+	github.com/grafana/grafana-openapi-client-go v0.0.0-20251202103709-7ef691d4df1d
 	github.com/grafana/grafana/apps/alerting/alertenrichment v0.0.0-20250925121631-89b988ca553e
 	github.com/grafana/grafana/apps/alerting/rules v0.0.0-20251029161707-af8d166b909c
 	github.com/grafana/grafana/apps/dashboard v0.0.0-20250424064802-2fbb2d6f5d27
@@ -39,7 +40,7 @@ require (
 	github.com/hashicorp/terraform-plugin-framework-jsontypes v0.2.0
 	github.com/hashicorp/terraform-plugin-framework-validators v0.17.0
 	github.com/hashicorp/terraform-plugin-go v0.26.0
-	github.com/hashicorp/terraform-plugin-log v0.9.0 // indirect
+	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-mux v0.18.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.36.1
 	github.com/prometheus/alertmanager v0.27.0
@@ -222,3 +223,7 @@ require (
 
 // https://github.com/hashicorp/terraform-exec/issues/423
 replace github.com/hashicorp/terraform-exec v0.22.0 => github.com/hrmsk66/terraform-exec v0.21.0
+
+replace github.com/cloud-native-tools/cws-lib-go/lib/cloud/grafana/api => ./pkg/cws-lib-go/lib/cloud/grafana/api
+
+replace github.com/grafana/grafana-openapi-client-go => github.com/grafana/grafana-openapi-client-go v0.0.0-20251118002049-9bc70ad4530f

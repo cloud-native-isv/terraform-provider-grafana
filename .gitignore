@@ -46,3 +46,6 @@ vendor/
 .ai/tools/*.md
 
 __pycache__/
+Thumbs.db
+*.tmp
+*.out

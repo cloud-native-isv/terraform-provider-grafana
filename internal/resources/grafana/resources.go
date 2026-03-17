@@ -119,6 +119,7 @@ var Resources = addValidationToResources(
 	resourcePublicDashboard(),
 	resourceDashboardPermission(),
 	resourceDataSource(),
+	resourceDatasourceQuery(),
 	resourceDataSourceConfig(),
 	resourceDatasourcePermission(),
 	resourceFolder(),

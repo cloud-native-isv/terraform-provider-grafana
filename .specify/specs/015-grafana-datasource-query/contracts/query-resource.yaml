@@ -1,0 +1,208 @@
+openapi: 3.0.3
+info:
+  title: grafana_datasource_query Resource Contract
+  version: 1.0.0
+  description: >-
+    Logical contract for Terraform resource execution. The provider maps resource
+    create/read refresh operations to these request/response shapes.
+
+paths:
+  /resource/grafana_datasource_query/managed:refresh:
+    post:
+      summary: Execute managed datasource query during resource refresh
+      operationId: refreshManagedDatasourceQuery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManagedRefreshRequest'
+      responses:
+        '200':
+          description: Refresh succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshSuccess'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+        '429':
+          $ref: '#/components/responses/ThrottlingError'
+        '502':
+          $ref: '#/components/responses/UpstreamError'
+
+  /resource/grafana_datasource_query/proxy:refresh:
+    post:
+      summary: Execute proxy datasource query during resource refresh
+      operationId: refreshProxyDatasourceQuery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProxyRefreshRequest'
+      responses:
+        '200':
+          description: Refresh succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshSuccess'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+        '429':
+          $ref: '#/components/responses/ThrottlingError'
+        '502':
+          $ref: '#/components/responses/UpstreamError'
+
+components:
+  schemas:
+    QueryMode:
+      type: string
+      enum: [managed, proxy]
+
+    TimeRange:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Defaults to now-24h when omitted
+        to:
+          type: string
+          description: Defaults to now when omitted
+
+    QueryTarget:
+      type: object
+      properties:
+        refId:
+          type: string
+        expr:
+          type: string
+        datasourceUid:
+          type: string
+        intervalMs:
+          type: integer
+          format: int64
+        maxDataPoints:
+          type: integer
+          format: int64
+        raw:
+          type: object
+          additionalProperties: true
+      required: [refId]
+
+    ManagedRefreshRequest:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/QueryMode'
+        datasourceId:
+          type: integer
+          format: int64
+        timeRange:
+          $ref: '#/components/schemas/TimeRange'
+        instant:
+          type: boolean
+        queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueryTarget'
+      required: [mode, datasourceId, queries]
+
+    ProxyRefreshRequest:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/QueryMode'
+        datasourceId:
+          type: integer
+          format: int64
+        timeRange:
+          $ref: '#/components/schemas/TimeRange'
+        path:
+          type: string
+        method:
+          type: string
+          enum: [GET, POST]
+        params:
+          type: object
+          additionalProperties:
+            type: string
+        body:
+          type: object
+          additionalProperties: true
+      required: [mode, datasourceId, path, method]
+
+    ResultSummary:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/QueryMode'
+        resultCount:
+          type: integer
+        from:
+          type: string
+        to:
+          type: string
+        fingerprint:
+          type: string
+        warnings:
+          type: array
+          items:
+            type: string
+      required: [mode, resultCount, fingerprint]
+
+    RefreshSuccess:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Deterministic hash from normalized configuration
+        summary:
+          $ref: '#/components/schemas/ResultSummary'
+      required: [id, summary]
+
+    QueryError:
+      type: object
+      properties:
+        category:
+          type: string
+          enum: [validation, authorization, throttling, upstream, network, unknown]
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+        retryable:
+          type: boolean
+      required: [category, message, retryable]
+
+  responses:
+    ValidationError:
+      description: Invalid request payload or mode-specific arguments
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QueryError'
+    AuthorizationError:
+      description: Authentication or authorization failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QueryError'
+    ThrottlingError:
+      description: Throttled or temporary unavailable, provider retries up to 3 times
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QueryError'
+    UpstreamError:
+      description: Datasource service or Grafana upstream failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QueryError'
